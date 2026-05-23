@@ -5,6 +5,7 @@ import {
   useReducer,
   type ReactNode,
 } from "react";
+import type { PromptResponse } from "../services/api";
 import type { MatchResponse, Person } from "../types/trip";
 import { useSession } from "./SessionContext";
 
@@ -12,6 +13,7 @@ interface TripState {
   people: Person[];
   selectedPersonIds: string[];
   prompt: string;
+  promptIntent: PromptResponse | null;
   lastResults: MatchResponse | null;
 }
 
@@ -20,6 +22,7 @@ type TripAction =
   | { type: "togglePerson"; id: string }
   | { type: "removePerson"; id: string }
   | { type: "setPrompt"; value: string }
+  | { type: "setPromptIntent"; intent: PromptResponse }
   | { type: "setResults"; results: MatchResponse }
   | { type: "reset"; initialState: TripState };
 
@@ -56,6 +59,8 @@ function reducer(state: TripState, action: TripAction): TripState {
       };
     case "setPrompt":
       return { ...state, prompt: action.value };
+    case "setPromptIntent":
+      return { ...state, promptIntent: action.intent };
     case "setResults":
       return { ...state, lastResults: action.results };
     case "reset":
@@ -70,6 +75,7 @@ interface TripContextValue extends TripState {
   togglePerson: (id: string) => void;
   removePerson: (id: string) => void;
   setPrompt: (value: string) => void;
+  setPromptIntent: (intent: PromptResponse) => void;
   setResults: (results: MatchResponse) => void;
   reset: () => void;
 }
@@ -83,6 +89,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
       people: [user],
       selectedPersonIds: [user.id],
       prompt: "",
+      promptIntent: null,
       lastResults: null,
     }),
     [user],
@@ -96,6 +103,8 @@ export function TripProvider({ children }: { children: ReactNode }) {
       togglePerson: (id) => dispatch({ type: "togglePerson", id }),
       removePerson: (id) => dispatch({ type: "removePerson", id }),
       setPrompt: (value) => dispatch({ type: "setPrompt", value }),
+      setPromptIntent: (intent) =>
+        dispatch({ type: "setPromptIntent", intent }),
       setResults: (results) => dispatch({ type: "setResults", results }),
       reset: () => dispatch({ type: "reset", initialState }),
     }),

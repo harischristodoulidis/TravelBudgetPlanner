@@ -3,6 +3,8 @@ import logging
 import os
 import re
 from contextlib import asynccontextmanager
+from datetime import datetime
+from pathlib import Path
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -26,6 +28,7 @@ from .models.user import User
 
 users: list[User] = []
 dest_packages: list[DestinationPackage] = []
+seed_packages: list[DestinationPackage] = []
 
 
 def _guard_dates(data: dict) -> list[str]:

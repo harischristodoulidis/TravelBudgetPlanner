@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CONTACTS } from "../services/contacts";
+import { useEffect, useState } from "react";
+import { fetchUsers, type BackendUser } from "../services/api";
 import type { Person } from "../types/trip";
 
 interface ContactsModalProps {
@@ -8,16 +8,48 @@ interface ContactsModalProps {
   onConfirm: (people: Person[]) => void;
 }
 
+function toPerson(user: BackendUser): Person {
+  return {
+    id: user.userId,
+    name: `${user.firstName} ${user.lastName}`.trim() || user.username,
+  };
+}
+
 export function ContactsModal({
   alreadySelectedIds,
   onClose,
   onConfirm,
 }: ContactsModalProps) {
+  const [contacts, setContacts] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    fetchUsers()
+      .then((users) => {
+        if (cancelled) return;
+        setContacts(users.map(toPerson));
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : "Failed to load users");
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const query = search.trim().toLowerCase();
-  const availableContacts = CONTACTS.filter(
+  const availableContacts = contacts.filter(
     (c) =>
       !alreadySelectedIds.includes(c.id) &&
       (query === "" || c.name.toLowerCase().includes(query)),
@@ -36,7 +68,7 @@ export function ContactsModal({
   }
 
   function confirm() {
-    const chosen = CONTACTS.filter((c) => picked.has(c.id));
+    const chosen = contacts.filter((c) => picked.has(c.id));
     onConfirm(chosen);
   }
 
@@ -78,7 +110,13 @@ export function ContactsModal({
           placeholder="Search companions"
           className="mb-3 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-brand-blue focus:outline-none"
         />
-        {availableContacts.length === 0 ? (
+        {loading ? (
+          <p className="mb-4 text-sm text-slate-400">Loading companions…</p>
+        ) : error ? (
+          <p className="mb-4 text-sm text-red-500">
+            Could not load companions. {error}
+          </p>
+        ) : availableContacts.length === 0 ? (
           <p className="mb-4 text-sm text-slate-400">
             {query
               ? "No contacts match your search."

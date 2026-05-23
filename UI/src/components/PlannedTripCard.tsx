@@ -1,4 +1,5 @@
 import type { PlannedTrip } from "../types/trip";
+import { PackagePicture } from "./PackagePicture";
 
 interface PlannedTripCardProps {
   trip: PlannedTrip;
@@ -21,10 +22,9 @@ export function PlannedTripCard({
         onClick={onClick}
         className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2.5 pr-10 text-left shadow-sm transition hover:border-brand-blue hover:shadow-md"
       >
-        <img
+        <PackagePicture
           src={destinationPackage.picture}
           alt={destinationPackage.destinationName}
-          loading="lazy"
           className="h-10 w-10 flex-shrink-0 rounded-lg object-cover"
         />
         <div className="flex flex-1 flex-col">
