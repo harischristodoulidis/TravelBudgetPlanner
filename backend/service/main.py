@@ -1,8 +1,20 @@
+import json
+import logging
+import os
+import re
 from contextlib import asynccontextmanager
+
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent.parent / ".env")
 from datetime import datetime
 
-from fastapi import FastAPI
+import requests
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 from .models.travel import (
     AccommodationDetails,
@@ -24,6 +36,7 @@ dest_packages: list[DestinationPackage] = []
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info("Startup: seeding in-memory user store")
     global users
     users = [
         User(
@@ -45,7 +58,9 @@ async def lifespan(app: FastAPI):
             createdAt=datetime(2024, 1, 2),
         ),
     ]
+    logger.info("Startup complete: %d users loaded", len(users))
     yield
+    logger.info("Shutdown: application lifespan ending")
 
 
 tags_metadata = [
@@ -108,6 +123,7 @@ def get_users():
     Seeded at startup with two demo accounts (`jdoe` and `jsmith`).
     No authentication is required.
     """
+    logger.info("GET /users: returning %d users", len(users))
     return users
 
 
@@ -119,22 +135,103 @@ def get_users():
     response_description="Structured trip intent extracted from the message",
 )
 def post_prompt(body: PromptRequestModel):
-    """Convert a free-text travel message into structured trip intent using Claude AI.
+    """Convert a free-text travel message into structured trip intent using WatsonX AI.
 
     The LLM extracts:
     - **departureDate / returnDate** — inferred from relative or absolute date phrases.
     - **destinations** — list of cities or countries mentioned.
     - **activities** — interests such as *food*, *museums*, *hiking*, etc.
 
-    The Claude `claude-sonnet-4-6` model is instructed to return only a JSON object
-    matching `PromptResponseModel`; the raw JSON string is parsed and returned directly.
+    Requires env vars: WATSONX_API_KEY, WATSONX_URL, WATSONX_PROJECT_ID.
+    Optional: WATSONX_MODEL_ID (defaults to ibm/granite-13b-chat-v2).
     """
-    return PromptResponseModel(
-        departureDate="2025-07-01",
-        returnDate="2025-07-10",
-        destinations=["Paris", "Rome"],
-        activities=["food", "museums"],
-    )
+    logger.info("POST /prompt: received message: %r", body.message)
+    try:
+        from urllib.parse import urlparse
+        logger.debug("Reading WatsonX env vars")
+        api_key = os.environ["WATSONX_API_KEY"].strip()
+        url = os.environ["WATSONX_URL"].strip()
+        project_id = os.environ["WATSONX_PROJECT_ID"].strip()
+        base_domain = ".".join(urlparse(url).hostname.split(".")[-3:])  # cloud.ibm.com
+        iam_url = f"https://iam.cloud.ibm.com/identity/token"
+        logger.debug("WatsonX config: url=%s project_id=%s model default=ibm/granite-13b-chat-v2", url, project_id)
+        model_id = os.getenv("WATSONX_MODEL_ID", "ibm/granite-13b-chat-v2")
+        logger.debug("Using model_id=%s", model_id)
+
+        logger.info("Requesting IAM bearer token from %s", iam_url)
+        token_resp = requests.post(
+            iam_url,
+            data={
+                "grant_type": "urn:ibm:params:oauth:grant-type:apikey",
+                "apikey": api_key,
+            },
+        )
+        logger.debug("IAM token response status: %s", token_resp.status_code)
+        token_resp.raise_for_status()
+        bearer = token_resp.json()["access_token"]
+        logger.info("IAM bearer token obtained successfully")
+
+        logger.info("Calling WatsonX text generation endpoint")
+        gen_resp = requests.post(
+            f"{url}/ml/v1/text/generation?version=2023-05-29",
+            headers={"Authorization": f"Bearer {bearer}", "Content-Type": "application/json"},
+            json={
+                "model_id": model_id,
+                "project_id": project_id,
+                "input": (
+                    "Extract trip details from the following travel message and return ONLY a valid JSON object "
+                    "with these exact fields: departureDate (ISO-8601 string), returnDate (ISO-8601 string), "
+                    "destinations (array of strings), activities (array of strings). "
+                    f"No markdown, no explanation — just the JSON object.\n\nMessage: {body.message}"
+                ),
+                "parameters": {"max_new_tokens": 300},
+            },
+        )
+        logger.debug("WatsonX generation response status: %s", gen_resp.status_code)
+        #gen_resp.raise_for_status()
+
+        print(gen_resp)
+
+
+        raw = gen_resp.json()["results"][0]["generated_text"]
+        logger.debug("AI raw response repr: %r", raw)
+
+        if not raw or not raw.strip():
+            logger.error("AI returned an empty generated_text")
+            raise HTTPException(status_code=502, detail="AI returned an empty response")
+
+        # Try parsing the stripped raw text directly first (model returned pure JSON)
+        data: dict | None = None
+        stripped = raw.strip()
+        if stripped.startswith("{"):
+            try:
+                data = json.loads(stripped)
+                logger.debug("Parsed JSON directly from raw response")
+            except json.JSONDecodeError:
+                logger.debug("Direct parse failed, falling back to regex extraction")
+
+        if data is None:
+            logger.info("Extracting JSON object from AI response via regex")
+            match = re.search(r"\{[^{}]*\}", raw, re.DOTALL)
+            if not match:
+                logger.error("No JSON object found in AI response: %r", raw)
+                raise HTTPException(status_code=502, detail=f"No JSON object found in AI response: {raw}")
+            matched_str = match.group().strip()
+            logger.debug("Regex-matched string repr: %r", matched_str)
+            data = json.loads(matched_str)
+
+        logger.info("Successfully parsed trip intent: destinations=%s activities=%s", data.get("destinations"), data.get("activities"))
+        return PromptResponseModel(**data)
+
+    except requests.HTTPError as e:
+        logger.error("WatsonX HTTP error: %s %s", e.response.status_code, e.response.text)
+        raise HTTPException(status_code=502, detail=f"WatsonX error: {e.response.status_code} {e.response.text}")
+    except KeyError as e:
+        logger.error("Missing env var or unexpected response shape: %s", e)
+        raise HTTPException(status_code=500, detail=f"Missing env var or unexpected response shape: {e}")
+    except json.JSONDecodeError as e:
+        logger.error("LLM returned invalid JSON: %s", e)
+        raise HTTPException(status_code=502, detail=f"LLM returned invalid JSON: {e}")
 
 
 @app.post(
@@ -156,6 +253,11 @@ def post_suggestions(body: PromptResponseModel):
 
     Uses the `claude-sonnet-4-6` model with a system prompt that enforces strict JSON output.
     """
+    logger.info(
+        "POST /suggestions: generating packages for destinations=%s activities=%s departure=%s return=%s",
+        body.destinations, body.activities, body.departureDate, body.returnDate,
+    )
+    logger.debug("Building mock destination package")
     mock_package = DestinationPackage(
         destinationName="Paris & Rome Explorer",
         totalPrice="$3200",
@@ -210,6 +312,7 @@ def post_suggestions(body: PromptResponseModel):
             ),
         ],
     )
+    logger.info("POST /suggestions: returning 1 package: %s", mock_package.destinationName)
     return Summary(summary=[mock_package])
 
 
@@ -226,7 +329,9 @@ def post_dest_package(body: DestinationPackage):
     **POST /suggestions**. The package is stored for the lifetime of the server
     process — there is no database persistence.
     """
+    logger.info("POST /destPackage: saving package %r", body.destinationName)
     dest_packages.append(body)
+    logger.info("POST /destPackage: store now has %d packages", len(dest_packages))
     return {"status": "ok"}
 
 
@@ -242,4 +347,5 @@ def get_dest_packages():
 
     The list is empty on a fresh server start and grows as packages are posted.
     """
+    logger.info("GET /destPackage: returning %d packages", len(dest_packages))
     return dest_packages
