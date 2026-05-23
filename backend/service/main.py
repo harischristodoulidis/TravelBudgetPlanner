@@ -7,9 +7,9 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
-from datetime import datetime
+from datetime import datetime, date
 
-import requests
+import google.generativeai as genai
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -32,6 +32,80 @@ from .models.user import User
 
 users: list[User] = []
 dest_packages: list[DestinationPackage] = []
+
+
+def _guard_dates(data: dict) -> list[str]:
+    """Returns a list of date issues. Empty list means all good."""
+    issues = []
+    today = date.today()
+    for field in ("departureDate", "returnDate"):
+        raw = data.get(field, "")
+        if not raw:
+            issues.append(f"{field} is missing")
+            continue
+        try:
+            parsed = date.fromisoformat(raw[:10])
+        except ValueError:
+            issues.append(f"{field} '{raw}' is not a valid date")
+            continue
+        if parsed <= today:
+            issues.append(f"{field} '{raw}' must be a future date")
+
+    if not issues:
+        dep = date.fromisoformat(data["departureDate"][:10])
+        ret = date.fromisoformat(data["returnDate"][:10])
+        if dep >= ret:
+            issues.append("departureDate must be before returnDate")
+
+    return issues
+
+
+def _correct_dates(data: dict, issues: list[str], original_message: str, model: genai.GenerativeModel) -> None:
+    """Ask the LLM to correct invalid dates in-place."""
+    prompt = (
+        f"A trip intent was parsed from this message: '{original_message}'\n"
+        f"The following date problems were found: {issues}\n"
+        f"Current values: departureDate={data.get('departureDate')}, returnDate={data.get('returnDate')}\n"
+        f"Today is {date.today().isoformat()}. Infer sensible future dates from the original message context.\n"
+        "Return ONLY a JSON object with departureDate and returnDate as YYYY-MM-DD strings. No markdown, no explanation."
+    )
+    response = model.generate_content(prompt)
+    raw = response.text.strip()
+    logger.debug("Date correction raw response: %r", raw)
+    match = re.search(r"\{[^{}]*\}", raw, re.DOTALL)
+    if not match:
+        logger.warning("Date correction returned unparseable response")
+        return
+    corrected = json.loads(match.group())
+    for field in ("departureDate", "returnDate"):
+        if field in corrected:
+            data[field] = corrected[field]
+            logger.info("Date corrected: %s → %s", field, corrected[field])
+
+
+def _guard_destinations(destinations: list[str], model: genai.GenerativeModel) -> None:
+    if not destinations:
+        raise HTTPException(status_code=422, detail="No destinations were found in your message")
+
+    prompt = (
+        f"Are these valid, real-world travel destinations? {destinations}\n"
+        "Return ONLY a JSON object with exactly two fields: "
+        "valid (boolean, true if ALL are real places), invalid (array of strings that are NOT real destinations). "
+        "No markdown, no explanation."
+    )
+    response = model.generate_content(prompt)
+    raw = response.text.strip()
+    logger.debug("Destination guard raw response: %r", raw)
+
+    match = re.search(r"\{[^{}]*\}", raw, re.DOTALL)
+    if not match:
+        logger.warning("Destination guard returned unparseable response — skipping")
+        return
+
+    result = json.loads(match.group())
+    if not result.get("valid", True):
+        invalid = result.get("invalid", [])
+        raise HTTPException(status_code=422, detail=f"These destinations don't appear to be real places: {invalid}")
 
 
 @asynccontextmanager
@@ -135,25 +209,27 @@ def get_users():
     response_description="Structured trip intent extracted from the message",
 )
 def post_prompt(body: PromptRequestModel):
-    """Convert a free-text travel message into structured trip intent using Ollama.
+    """Convert a free-text travel message into structured trip intent using Gemini.
 
     The LLM extracts:
     - **departureDate / returnDate** — inferred from relative or absolute date phrases.
     - **destinations** — list of cities or countries mentioned.
     - **activities** — interests such as *food*, *museums*, *hiking*, etc.
 
-    Optional env vars:
-    - OLLAMA_URL (defaults to http://localhost:11434)
-    - OLLAMA_MODEL (defaults to llama3)
+    Required env var:
+    - GEMINI_API_KEY — Google AI Studio API key (free tier available)
+
+    Optional env var:
+    - GEMINI_MODEL (defaults to gemini-2.0-flash)
     """
     logger.info("POST /prompt: received message: %r", body.message)
     try:
-        ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
-        model = os.getenv("OLLAMA_MODEL", "llama3")
-        logger.debug("Ollama config: url=%s model=%s", ollama_url, model)
+        api_key = os.getenv("GEMINI_API_KEY", "")
+        model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not set")
+        logger.debug("Gemini config: model=%s", model_name)
 
-        logger.info("body.message: %s", body.message)
-    
         prompt = (
             "Extract trip details from the following travel message and return ONLY a valid JSON object "
             "with these exact fields: departureDate (ISO-8601 string), returnDate (ISO-8601 string), "
@@ -161,21 +237,16 @@ def post_prompt(body: PromptRequestModel):
             f"No markdown, no explanation — just the JSON object.\n\nMessage: {body.message}"
         )
 
-        logger.info("Calling Ollama generate endpoint")
-        gen_resp = requests.post(
-            f"{ollama_url}/api/generate",
-            json={"model": model, "prompt": prompt, "stream": False},
-            timeout=120,
-        )
-        logger.debug("Ollama response status: %s", gen_resp.status_code)
-        gen_resp.raise_for_status()
-
-        raw = gen_resp.json().get("response", "")
-        logger.debug("AI raw response repr: %r", raw)
+        logger.info("Calling Gemini API")
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(prompt)
+        raw = response.text
+        logger.debug("Gemini raw response repr: %r", raw)
 
         if not raw or not raw.strip():
-            logger.error("Ollama returned an empty response")
-            raise HTTPException(status_code=502, detail="Ollama returned an empty response")
+            logger.error("Gemini returned an empty response")
+            raise HTTPException(status_code=502, detail="Gemini returned an empty response")
 
         data: dict | None = None
         stripped = raw.strip()
@@ -206,17 +277,25 @@ def post_prompt(body: PromptRequestModel):
             data[field] = m.group() if m else ""
 
         logger.info("Successfully parsed trip intent: destinations=%s activities=%s", data["destinations"], data["activities"])
+
+        date_issues = _guard_dates(data)
+        if date_issues:
+            logger.warning("Date issues detected: %s — attempting LLM correction", date_issues)
+            _correct_dates(data, date_issues, body.message, model)
+            date_issues = _guard_dates(data)
+            if date_issues:
+                raise HTTPException(status_code=422, detail=f"Could not produce valid dates: {date_issues}")
+
+        _guard_destinations(data["destinations"], model)
+
         return PromptResponseModel(**data)
 
-    except requests.HTTPError as e:
-        logger.error("Ollama HTTP error: %s %s", e.response.status_code, e.response.text)
-        raise HTTPException(status_code=502, detail=f"Ollama error: {e.response.status_code} {e.response.text}")
-    except requests.ConnectionError:
-        logger.error("Could not connect to Ollama at %s", os.getenv("OLLAMA_URL", "http://localhost:11434"))
-        raise HTTPException(status_code=502, detail="Could not connect to Ollama — is it running?")
     except json.JSONDecodeError as e:
         logger.error("LLM returned invalid JSON: %s", e)
         raise HTTPException(status_code=502, detail=f"LLM returned invalid JSON: {e}")
+    except Exception as e:
+        logger.error("Gemini API error: %s", e)
+        raise HTTPException(status_code=502, detail=f"Gemini API error: {e}")
 
 
 @app.post(
