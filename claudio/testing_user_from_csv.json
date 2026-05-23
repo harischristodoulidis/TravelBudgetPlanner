@@ -1,0 +1,23 @@
+{
+  "user_id": "test_user_001",
+  "user_travel_profile": {
+    "spending_power": {
+      "budget_capacity": 4,
+      "price_sensitivity": 6
+    },
+    "experience_preferences": {
+      "dining_sophistication": 1,
+      "cultural_engagement": 3,
+      "nightlife_propensity": 2,
+      "pace_and_goal": 6
+    },
+    "movement_and_geography": {
+      "mobility_style": 5,
+      "geographic_orientation": 3
+    },
+    "lifestyle_signals": {
+      "physical_activity_level": 1,
+      "nature_and_values": 3
+    }
+  }
+}
