@@ -1,32 +1,72 @@
 [
     {
         "type": "airplane",
-        "company": "Aegean",
+        "company": "Ryanair",
         "origin": "Athens",
         "destination": "Rome",
-        "departure_date": "2026-08-01",
-        "arrival_date": "2026-08-01",
-        "price": 94,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
         "departure_date": "2026-08-01",
         "arrival_date": "2026-08-01",
         "price": 37,
         "currency": "EUR"
     },
     {
+        "type": "airplane",
+        "company": "Aegean",
+        "origin": "Athens",
+        "destination": "Rome",
+        "departure_date": "2026-08-01",
+        "arrival_date": "2026-08-01",
+        "price": 277,
+        "currency": "EUR"
+    },
+    {
+        "type": "airplane",
+        "company": "Ryanair",
+        "origin": "Athens",
+        "destination": "Rome",
+        "departure_date": "2026-08-02",
+        "arrival_date": "2026-08-02",
+        "price": 48,
+        "currency": "EUR"
+    },
+    {
+        "type": "airplane",
+        "company": "Aegean",
+        "origin": "Athens",
+        "destination": "Rome",
+        "departure_date": "2026-08-02",
+        "arrival_date": "2026-08-02",
+        "price": 230,
+        "currency": "EUR"
+    },
+    {
+        "type": "airplane",
+        "company": "Ryanair",
+        "origin": "Athens",
+        "destination": "Rome",
+        "departure_date": "2026-08-05",
+        "arrival_date": "2026-08-05",
+        "price": 46,
+        "currency": "EUR"
+    },
+    {
+        "type": "airplane",
+        "company": "Ryanair",
+        "origin": "Athens",
+        "destination": "Rome",
+        "departure_date": "2026-08-08",
+        "arrival_date": "2026-08-08",
+        "price": 55,
+        "currency": "EUR"
+    },
+    {
         "type": "train",
         "company": "Trenitalia",
         "origin": "Rome",
         "destination": "Florence",
-        "departure_date": "2026-08-02",
-        "arrival_date": "2026-08-02",
-        "price": 47,
+        "departure_date": "2026-08-05",
+        "arrival_date": "2026-08-05",
+        "price": 48,
         "currency": "EUR"
     },
     {
@@ -34,8 +74,28 @@
         "company": "Flixbus",
         "origin": "Rome",
         "destination": "Florence",
-        "departure_date": "2026-08-02",
-        "arrival_date": "2026-08-02",
+        "departure_date": "2026-08-05",
+        "arrival_date": "2026-08-05",
+        "price": 23,
+        "currency": "EUR"
+    },
+    {
+        "type": "train",
+        "company": "Trenitalia",
+        "origin": "Rome",
+        "destination": "Florence",
+        "departure_date": "2026-08-06",
+        "arrival_date": "2026-08-06",
+        "price": 48,
+        "currency": "EUR"
+    },
+    {
+        "type": "bus",
+        "company": "Flixbus",
+        "origin": "Rome",
+        "destination": "Florence",
+        "departure_date": "2026-08-06",
+        "arrival_date": "2026-08-06",
         "price": 23,
         "currency": "EUR"
     },
@@ -44,69 +104,9 @@
         "company": "Aegean",
         "origin": "Florence",
         "destination": "Athens",
-        "departure_date": "2026-08-02",
-        "arrival_date": "2026-08-02",
-        "price": 112,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-03",
-        "arrival_date": "2026-08-03",
-        "price": 64,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-03",
-        "arrival_date": "2026-08-03",
-        "price": 53,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-04",
-        "arrival_date": "2026-08-04",
-        "price": 108,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-04",
-        "arrival_date": "2026-08-04",
-        "price": 38,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-05",
-        "arrival_date": "2026-08-05",
-        "price": 62,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-05",
-        "arrival_date": "2026-08-05",
-        "price": 38,
+        "departure_date": "2026-08-22",
+        "arrival_date": "2026-08-22",
+        "price": 190,
         "currency": "EUR"
     },
     {
@@ -114,349 +114,9 @@
         "company": "Aegean",
         "origin": "Florence",
         "destination": "Athens",
-        "departure_date": "2026-08-05",
-        "arrival_date": "2026-08-05",
-        "price": 105,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-06",
-        "arrival_date": "2026-08-06",
-        "price": 49,
-        "currency": "EUR"
-    },
-    {
-        "type": "bus",
-        "company": "Flixbus",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-06",
-        "arrival_date": "2026-08-06",
-        "price": 15,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-07",
-        "arrival_date": "2026-08-07",
-        "price": 61,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-07",
-        "arrival_date": "2026-08-07",
-        "price": 44,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-08",
-        "arrival_date": "2026-08-08",
-        "price": 92,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-08",
-        "arrival_date": "2026-08-08",
-        "price": 50,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-09",
-        "arrival_date": "2026-08-09",
-        "price": 49,
-        "currency": "EUR"
-    },
-    {
-        "type": "bus",
-        "company": "Flixbus",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-09",
-        "arrival_date": "2026-08-09",
-        "price": 18,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Florence",
-        "destination": "Athens",
-        "departure_date": "2026-08-09",
-        "arrival_date": "2026-08-09",
-        "price": 125,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-10",
-        "arrival_date": "2026-08-10",
-        "price": 45,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-10",
-        "arrival_date": "2026-08-10",
-        "price": 44,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-11",
-        "arrival_date": "2026-08-11",
-        "price": 82,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-11",
-        "arrival_date": "2026-08-11",
-        "price": 37,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-12",
-        "arrival_date": "2026-08-12",
-        "price": 65,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-12",
-        "arrival_date": "2026-08-12",
-        "price": 51,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Florence",
-        "destination": "Athens",
-        "departure_date": "2026-08-12",
-        "arrival_date": "2026-08-12",
-        "price": 143,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-13",
-        "arrival_date": "2026-08-13",
-        "price": 39,
-        "currency": "EUR"
-    },
-    {
-        "type": "bus",
-        "company": "Flixbus",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-13",
-        "arrival_date": "2026-08-13",
-        "price": 17,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-14",
-        "arrival_date": "2026-08-14",
-        "price": 52,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-14",
-        "arrival_date": "2026-08-14",
-        "price": 52,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-15",
-        "arrival_date": "2026-08-15",
-        "price": 81,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-15",
-        "arrival_date": "2026-08-15",
-        "price": 52,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-16",
-        "arrival_date": "2026-08-16",
-        "price": 39,
-        "currency": "EUR"
-    },
-    {
-        "type": "bus",
-        "company": "Flixbus",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-16",
-        "arrival_date": "2026-08-16",
-        "price": 25,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Florence",
-        "destination": "Athens",
-        "departure_date": "2026-08-16",
-        "arrival_date": "2026-08-16",
-        "price": 132,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-17",
-        "arrival_date": "2026-08-17",
-        "price": 63,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-17",
-        "arrival_date": "2026-08-17",
-        "price": 51,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-18",
-        "arrival_date": "2026-08-18",
-        "price": 109,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-18",
-        "arrival_date": "2026-08-18",
-        "price": 44,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Ryanair",
-        "origin": "Athens",
-        "destination": "Rome",
-        "departure_date": "2026-08-19",
-        "arrival_date": "2026-08-19",
-        "price": 53,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-19",
-        "arrival_date": "2026-08-19",
-        "price": 37,
-        "currency": "EUR"
-    },
-    {
-        "type": "airplane",
-        "company": "Aegean",
-        "origin": "Florence",
-        "destination": "Athens",
-        "departure_date": "2026-08-19",
-        "arrival_date": "2026-08-19",
-        "price": 134,
-        "currency": "EUR"
-    },
-    {
-        "type": "train",
-        "company": "Trenitalia",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-20",
-        "arrival_date": "2026-08-20",
-        "price": 37,
-        "currency": "EUR"
-    },
-    {
-        "type": "bus",
-        "company": "Flixbus",
-        "origin": "Rome",
-        "destination": "Florence",
-        "departure_date": "2026-08-20",
-        "arrival_date": "2026-08-20",
-        "price": 20,
+        "departure_date": "2026-08-23",
+        "arrival_date": "2026-08-23",
+        "price": 118,
         "currency": "EUR"
     }
 ]
