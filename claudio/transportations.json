@@ -6,7 +6,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-01",
         "arrival_date": "2026-08-01",
-        "price": 37,
+        "price": 28,
         "currency": "EUR"
     },
     {
@@ -16,7 +16,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-01",
         "arrival_date": "2026-08-01",
-        "price": 277,
+        "price": 229,
         "currency": "EUR"
     },
     {
@@ -26,7 +26,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-02",
         "arrival_date": "2026-08-02",
-        "price": 48,
+        "price": 77,
         "currency": "EUR"
     },
     {
@@ -36,7 +36,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-02",
         "arrival_date": "2026-08-02",
-        "price": 230,
+        "price": 272,
         "currency": "EUR"
     },
     {
@@ -46,7 +46,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-05",
         "arrival_date": "2026-08-05",
-        "price": 46,
+        "price": 85,
         "currency": "EUR"
     },
     {
@@ -56,7 +56,7 @@
         "destination": "Rome",
         "departure_date": "2026-08-08",
         "arrival_date": "2026-08-08",
-        "price": 55,
+        "price": 45,
         "currency": "EUR"
     },
     {
@@ -66,7 +66,7 @@
         "destination": "Florence",
         "departure_date": "2026-08-05",
         "arrival_date": "2026-08-05",
-        "price": 48,
+        "price": 50,
         "currency": "EUR"
     },
     {
@@ -76,7 +76,7 @@
         "destination": "Florence",
         "departure_date": "2026-08-05",
         "arrival_date": "2026-08-05",
-        "price": 23,
+        "price": 22,
         "currency": "EUR"
     },
     {
@@ -86,7 +86,7 @@
         "destination": "Florence",
         "departure_date": "2026-08-06",
         "arrival_date": "2026-08-06",
-        "price": 48,
+        "price": 53,
         "currency": "EUR"
     },
     {
@@ -96,7 +96,7 @@
         "destination": "Florence",
         "departure_date": "2026-08-06",
         "arrival_date": "2026-08-06",
-        "price": 23,
+        "price": 16,
         "currency": "EUR"
     },
     {
@@ -106,7 +106,7 @@
         "destination": "Athens",
         "departure_date": "2026-08-22",
         "arrival_date": "2026-08-22",
-        "price": 190,
+        "price": 122,
         "currency": "EUR"
     },
     {
@@ -116,7 +116,7 @@
         "destination": "Athens",
         "departure_date": "2026-08-23",
         "arrival_date": "2026-08-23",
-        "price": 118,
+        "price": 177,
         "currency": "EUR"
     }
 ]

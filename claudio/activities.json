@@ -1,12 +1,22 @@
 [
     {
-        "type": "food",
-        "company": "La Pergola",
+        "type": "natural",
+        "company": "Green Tours",
         "city": "Rome",
-        "name": "3-Michelin Star Tasting Menu",
+        "name": "Appian Way E-Bike",
         "arrival_date": "2026-08-03",
         "departure_date": "2026-08-03",
-        "price": 290,
+        "price": 45,
+        "currency": "EUR"
+    },
+    {
+        "type": "nightlife",
+        "company": "Rome Pub Crawl",
+        "city": "Rome",
+        "name": "Trastevere Bar Tour",
+        "arrival_date": "2026-08-03",
+        "departure_date": "2026-08-03",
+        "price": 30,
         "currency": "EUR"
     },
     {
@@ -20,23 +30,13 @@
         "currency": "EUR"
     },
     {
-        "type": "natural",
-        "company": "Green Tours",
+        "type": "relaxed",
+        "company": "QC Terme",
         "city": "Rome",
-        "name": "Appian Way E-Bike",
+        "name": "Roman Thermal Baths",
         "arrival_date": "2026-08-03",
         "departure_date": "2026-08-03",
-        "price": 45,
-        "currency": "EUR"
-    },
-    {
-        "type": "food",
-        "company": "Il Margutta",
-        "city": "Rome",
-        "name": "Gourmet Vegan Dinner",
-        "arrival_date": "2026-08-03",
-        "departure_date": "2026-08-03",
-        "price": 45,
+        "price": 55,
         "currency": "EUR"
     },
     {
@@ -50,16 +50,6 @@
         "currency": "EUR"
     },
     {
-        "type": "food",
-        "company": "Enoteca Pinchiorri",
-        "city": "Florence",
-        "name": "Exclusive Wine & Dine",
-        "arrival_date": "2026-08-07",
-        "departure_date": "2026-08-07",
-        "price": 320,
-        "currency": "EUR"
-    },
-    {
         "type": "relaxed",
         "company": "Tuscany Tastes",
         "city": "Florence",
@@ -67,6 +57,16 @@
         "arrival_date": "2026-08-07",
         "departure_date": "2026-08-07",
         "price": 65,
+        "currency": "EUR"
+    },
+    {
+        "type": "food",
+        "company": "Enoteca Pinchiorri",
+        "city": "Florence",
+        "name": "Exclusive Wine & Dine",
+        "arrival_date": "2026-08-07",
+        "departure_date": "2026-08-07",
+        "price": 320,
         "currency": "EUR"
     },
     {
@@ -80,13 +80,23 @@
         "currency": "EUR"
     },
     {
-        "type": "natural",
-        "company": "Hike Greece",
+        "type": "cultural",
+        "company": "Athens Walking Tours",
         "city": "Athens",
-        "name": "Mount Lycabettus Hike",
+        "name": "Acropolis Guided Tour",
         "arrival_date": "2026-08-25",
         "departure_date": "2026-08-25",
-        "price": 20,
+        "price": 40,
+        "currency": "EUR"
+    },
+    {
+        "type": "relaxed",
+        "company": "Cine Paris",
+        "city": "Athens",
+        "name": "Open Air Cinema Plaka",
+        "arrival_date": "2026-08-25",
+        "departure_date": "2026-08-25",
+        "price": 12,
         "currency": "EUR"
     },
     {
@@ -100,23 +110,13 @@
         "currency": "EUR"
     },
     {
-        "type": "food",
-        "company": "Vegan Beat",
+        "type": "nightlife",
+        "company": "Gazi Clubs",
         "city": "Athens",
-        "name": "Vegan Greek Street Food",
+        "name": "Bouzoukia Live Night",
         "arrival_date": "2026-08-25",
         "departure_date": "2026-08-25",
-        "price": 18,
-        "currency": "EUR"
-    },
-    {
-        "type": "cultural",
-        "company": "Athens Walking Tours",
-        "city": "Athens",
-        "name": "Acropolis Guided Tour",
-        "arrival_date": "2026-08-25",
-        "departure_date": "2026-08-25",
-        "price": 40,
+        "price": 80,
         "currency": "EUR"
     }
 ]
