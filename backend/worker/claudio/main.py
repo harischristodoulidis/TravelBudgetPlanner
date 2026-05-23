@@ -169,12 +169,14 @@ def build_package(itinerary, accommodations, activities):
     city1, city2 = itinerary["top_1_city"], itinerary["top_2_city"]
     leg1, leg2, leg3 = itinerary["leg1"], itinerary["leg2"], itinerary["leg3"]
 
+    TYPE_MAP = {"airplane": "Flight", "train": "Train", "bus": "Bus"}
+
     def to_transport(leg):
         if not leg: return None
         return {
             "departure": leg["origin"],
             "arrival": leg["destination"],
-            "transportationType": leg["type"].capitalize(),
+            "transportationType": TYPE_MAP.get(leg["type"].lower(), leg["type"].capitalize()),
             "price": str(leg["price"])
         }
 
@@ -213,6 +215,7 @@ def build_package(itinerary, accommodations, activities):
                 "transportation": [t for t in [to_transport(leg1)] if t],
                 "cities": [{
                     "name": city1,
+                    "country": city1,
                     "accommodation": to_acc(acc1),
                     "activityDetails": to_activity(act1)
                 }]
@@ -222,6 +225,7 @@ def build_package(itinerary, accommodations, activities):
                 "transportation": [t for t in [to_transport(leg2), to_transport(leg3)] if t],
                 "cities": [{
                     "name": city2,
+                    "country": city2,
                     "accommodation": to_acc(acc2),
                     "activityDetails": to_activity(act2)
                 }]
