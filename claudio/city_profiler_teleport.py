@@ -4,10 +4,10 @@ import time
 
 def get_osm_city_profile(city_name):
     offline_fallback_data = {
-        "Rome": {"budget_city": 6.0, "relaxed_city": 8.5, "natural_city": 7.2, "cultural_city": 10.0, "nightlife_city": 9.4},
-        "Florence": {"budget_city": 5.5, "relaxed_city": 7.8, "natural_city": 6.0, "cultural_city": 10.0, "nightlife_city": 7.5},
-        "Venice": {"budget_city": 3.0, "relaxed_city": 6.5, "natural_city": 4.0, "cultural_city": 10.0, "nightlife_city": 6.2},
-        "Athens": {"budget_city": 8.5, "relaxed_city": 6.8, "natural_city": 5.5, "cultural_city": 9.8, "nightlife_city": 8.8}
+        "Rome": {"budget_city": 6.0, "relaxed_city": 8.5, "natural_city": 7.2, "cultural_city": 10.0, "nightlife_city": 6.4},
+        "Florence": {"budget_city": 7.5, "relaxed_city": 7.8, "natural_city": 6.0, "cultural_city": 10.0, "nightlife_city": 7.5},
+        "Venice": {"budget_city": 9.0, "relaxed_city": 1.5, "natural_city": 7.0, "cultural_city": 9.0, "nightlife_city": 9.2},
+        "Athens": {"budget_city": 9.0, "relaxed_city": 6.8, "natural_city": 5.5, "cultural_city": 9.8, "nightlife_city": 8.8}
     }
 
     try:
