@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl ls *)",
+      "PowerShell(wsl ls -la /mnt/c/Users/ckkap/dev/TravelBudgetPlanner/backend)"
+    ]
+  }
+}
