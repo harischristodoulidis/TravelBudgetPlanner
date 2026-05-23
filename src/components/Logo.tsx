@@ -1,0 +1,18 @@
+interface LogoProps {
+  className?: string
+}
+
+export function Logo({ className = 'h-6 w-6' }: LogoProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 32 32"
+      className={className}
+      aria-hidden
+    >
+      <rect width="32" height="32" rx="7" fill="#5da6e8" />
+      <path d="M27 5 L5 14 L13 17 L14 26 L18 20 L27 5 Z" fill="#ffffff" />
+      <path d="M14 26 L18 20 L13 17 Z" fill="#d8ecfb" />
+    </svg>
+  )
+}

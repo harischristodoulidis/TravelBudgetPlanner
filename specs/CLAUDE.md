@@ -31,7 +31,7 @@ The file `wireframe.png` in the repo root is the designer's reference — match 
 - Cards are tappable → navigate to Screen 3
 - Show 3 cards; "expand more" below (per ARCHITECTURE.md)
 
-### Screen 3 — Itinerary (`/trip/:id`)
+### Screen 3 — Trip Details (`/trip/:id`)
 
 - City name as large heading, theme subtitle below
 - Vertical list of line items: diamond icon ◇ | item name (bold) + provider (small muted) | cost right-aligned
@@ -51,7 +51,7 @@ The file `wireframe.png` in the repo root is the designer's reference — match 
 
 - **Group** — the travellers; each has a financial profile + preference profile from the bank
 - **Destination match** — ranked by group budget fit + preference alignment
-- **Itinerary** — ordered list of bookable items (flights, transfers, hotels, activities) with provider and cost
+- **Trip Details** — ordered list of bookable items (flights, transfers, hotels, activities) with provider and cost
 - **Vault** — shared savings account; members contribute at their own pace toward the trip total
 - **Per-person cost** — all prices shown per person unless labelled otherwise
 

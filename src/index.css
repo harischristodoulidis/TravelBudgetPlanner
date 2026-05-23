@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #5da6e8;
+  --color-brand-blue-soft: #d8ecfb;
+  --color-brand-yellow: #f5d87a;
+  --color-brand-grey: #f4f5f7;
+  --color-contrib-high: #f08a3c;
+  --color-contrib-medium: #e6b94a;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(160deg, var(--color-brand-blue-soft) 0%, #fafbfc 45%, #fff7e0 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #1f2933;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
