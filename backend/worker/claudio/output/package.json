@@ -1,0 +1,66 @@
+{
+  "destinationName": "Athens \u2192 Rome & Florence",
+  "totalPrice": "579",
+  "description": "Personalized trip from Athens to Rome and Florence, tailored to your budget and travel style.",
+  "picture": "",
+  "destinationsList": [
+    {
+      "name": "Rome",
+      "transportation": [
+        {
+          "departure": "Athens",
+          "arrival": "Rome",
+          "transportationType": "Airplane",
+          "price": "32"
+        }
+      ],
+      "cities": [
+        {
+          "name": "Rome",
+          "accommodation": {
+            "name": "YellowSquare Hostel",
+            "price": "105"
+          },
+          "activityDetails": [
+            {
+              "name": "Roman Thermal Baths",
+              "price": "55"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Florence",
+      "transportation": [
+        {
+          "departure": "Rome",
+          "arrival": "Florence",
+          "transportationType": "Bus",
+          "price": "15"
+        },
+        {
+          "departure": "Florence",
+          "arrival": "Athens",
+          "transportationType": "Airplane",
+          "price": "187"
+        }
+      ],
+      "cities": [
+        {
+          "name": "Florence",
+          "accommodation": {
+            "name": "Plus Florence",
+            "price": "120"
+          },
+          "activityDetails": [
+            {
+              "name": "Chianti Wine Tasting",
+              "price": "65"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

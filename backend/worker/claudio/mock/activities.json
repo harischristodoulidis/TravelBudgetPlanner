@@ -1,0 +1,122 @@
+[
+    {
+        "type": "food",
+        "company": "La Pergola",
+        "city": "Rome",
+        "name": "3-Michelin Star Tasting Menu",
+        "arrival_date": "2026-08-03",
+        "departure_date": "2026-08-03",
+        "price": 290,
+        "currency": "EUR"
+    },
+    {
+        "type": "cultural",
+        "company": "Vatican Museums",
+        "city": "Rome",
+        "name": "Vatican Museums tour",
+        "arrival_date": "2026-08-03",
+        "departure_date": "2026-08-03",
+        "price": 35,
+        "currency": "EUR"
+    },
+    {
+        "type": "food",
+        "company": "Il Margutta",
+        "city": "Rome",
+        "name": "Gourmet Vegan Dinner",
+        "arrival_date": "2026-08-03",
+        "departure_date": "2026-08-03",
+        "price": 45,
+        "currency": "EUR"
+    },
+    {
+        "type": "relaxed",
+        "company": "QC Terme",
+        "city": "Rome",
+        "name": "Roman Thermal Baths",
+        "arrival_date": "2026-08-03",
+        "departure_date": "2026-08-03",
+        "price": 55,
+        "currency": "EUR"
+    },
+    {
+        "type": "natural",
+        "company": "Green Tours",
+        "city": "Florence",
+        "name": "Boboli Gardens Sunset",
+        "arrival_date": "2026-08-07",
+        "departure_date": "2026-08-07",
+        "price": 15,
+        "currency": "EUR"
+    },
+    {
+        "type": "cultural",
+        "company": "Uffizi Gallery",
+        "city": "Florence",
+        "name": "Uffizi Masterpieces",
+        "arrival_date": "2026-08-07",
+        "departure_date": "2026-08-07",
+        "price": 28,
+        "currency": "EUR"
+    },
+    {
+        "type": "food",
+        "company": "Raw Vegan Firenze",
+        "city": "Florence",
+        "name": "Organic Vegan Lunch",
+        "arrival_date": "2026-08-07",
+        "departure_date": "2026-08-07",
+        "price": 25,
+        "currency": "EUR"
+    },
+    {
+        "type": "relaxed",
+        "company": "Tuscany Tastes",
+        "city": "Florence",
+        "name": "Chianti Wine Tasting",
+        "arrival_date": "2026-08-07",
+        "departure_date": "2026-08-07",
+        "price": 65,
+        "currency": "EUR"
+    },
+    {
+        "type": "food",
+        "company": "Vegan Beat",
+        "city": "Athens",
+        "name": "Vegan Greek Street Food",
+        "arrival_date": "2026-08-25",
+        "departure_date": "2026-08-25",
+        "price": 18,
+        "currency": "EUR"
+    },
+    {
+        "type": "food",
+        "company": "Spondi",
+        "city": "Athens",
+        "name": "Acropolis View Fine Dining",
+        "arrival_date": "2026-08-25",
+        "departure_date": "2026-08-25",
+        "price": 180,
+        "currency": "EUR"
+    },
+    {
+        "type": "natural",
+        "company": "Hike Greece",
+        "city": "Athens",
+        "name": "Mount Lycabettus Hike",
+        "arrival_date": "2026-08-25",
+        "departure_date": "2026-08-25",
+        "price": 20,
+        "currency": "EUR"
+    },
+    {
+        "type": "nightlife",
+        "company": "Gazi Clubs",
+        "city": "Athens",
+        "name": "Bouzoukia Live Night",
+        "arrival_date": "2026-08-25",
+        "departure_date": "2026-08-25",
+        "price": 80,
+        "currency": "EUR"
+    }
+]

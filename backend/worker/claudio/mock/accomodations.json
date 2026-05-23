@@ -1,0 +1,101 @@
+[
+    {
+        "type": "hotel",
+        "company": "Booking.com",
+        "city": "Rome",
+        "name": "Hotel Roma",
+        "destination": "Rome",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 210,
+        "currency": "EUR"
+    },
+    {
+        "type": "hotel",
+        "company": "Booking.com",
+        "city": "Rome",
+        "name": "Hotel Luxor",
+        "destination": "Rome",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 480,
+        "currency": "EUR"
+    },
+    {
+        "type": "hostel",
+        "company": "Hostelworld",
+        "city": "Rome",
+        "name": "YellowSquare Hostel",
+        "destination": "Rome",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 105,
+        "currency": "EUR"
+    },
+    {
+        "type": "hostel",
+        "company": "Hostelworld",
+        "city": "Florence",
+        "name": "Plus Florence",
+        "destination": "Florence",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 120,
+        "currency": "EUR"
+    },
+    {
+        "type": "B&B",
+        "company": "Airbnb",
+        "city": "Florence",
+        "name": "Tuscan Dream B&B",
+        "destination": "Florence",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 195,
+        "currency": "EUR"
+    },
+    {
+        "type": "hotel",
+        "company": "Booking.com",
+        "city": "Florence",
+        "name": "Hotel Michelangelo",
+        "destination": "Florence",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 450,
+        "currency": "EUR"
+    },
+    {
+        "type": "B&B",
+        "company": "Airbnb",
+        "city": "Athens",
+        "name": "Plaka Vibes Suite",
+        "destination": "Athens",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 525,
+        "currency": "EUR"
+    },
+    {
+        "type": "hostel",
+        "company": "Hostelworld",
+        "city": "Athens",
+        "name": "Athens Backpackers",
+        "destination": "Athens",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 90,
+        "currency": "EUR"
+    },
+    {
+        "type": "hotel",
+        "company": "Booking.com",
+        "city": "Athens",
+        "name": "Acropolis Palace",
+        "destination": "Athens",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 420,
+        "currency": "EUR"
+    }
+]
