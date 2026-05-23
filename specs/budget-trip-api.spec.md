@@ -240,6 +240,98 @@ Returns all saved destination packages.
 
 ---
 
+## Swagger / OpenAPI Documentation
+
+FastAPI serves interactive docs automatically at `/docs` (Swagger UI) and `/redoc` (ReDoc). No extra packages are needed — just enrich the existing FastAPI app and Pydantic models.
+
+### 1. App-level metadata
+
+Pass the following keyword arguments to the `FastAPI(...)` constructor in `service/main.py`:
+
+```python
+tags_metadata = [
+    {"name": "users",       "description": "Read-only user directory. No authentication required for the hackathon demo."},
+    {"name": "prompt",      "description": "Natural-language parsing. Send a free-text travel message; receive structured trip intent via Claude AI."},
+    {"name": "suggestions", "description": "AI-generated trip packages. Accepts structured trip intent and returns curated DestinationPackage options."},
+    {"name": "packages",    "description": "Saved destination packages. Simple in-memory store — data resets on server restart."},
+]
+
+app = FastAPI(
+    title="TravelBudgetPlanner API",
+    description=(
+        "## Overview\n\n"
+        "Backend for the **TravelBudgetPlanner** hackathon project. ...\n\n"
+        "### Flow\n"
+        "1. **POST /prompt** — parse free-text into structured trip intent.\n"
+        "2. **POST /suggestions** — receive curated DestinationPackage options.\n"
+        "3. **POST /destPackage** — save a chosen package.\n"
+        "4. **GET /destPackage** — retrieve saved packages.\n\n"
+        "> No authentication is implemented."
+    ),
+    version="0.1.0",
+    contact={"name": "TravelBudgetPlanner Team"},
+    openapi_tags=tags_metadata,
+    lifespan=lifespan,
+)
+```
+
+### 2. Per-route metadata
+
+Add `tags`, `summary`, and `response_description` to every `@app.get` / `@app.post` decorator, and a docstring to the handler function. FastAPI renders the docstring as the long description in Swagger.
+
+```python
+@app.post(
+    "/prompt",
+    response_model=PromptResponseModel,
+    tags=["prompt"],
+    summary="Parse a natural-language travel request",
+    response_description="Structured trip intent extracted from the message",
+)
+def post_prompt(body: PromptRequestModel):
+    """Convert a free-text travel message into structured trip intent using Claude AI.
+
+    The LLM extracts departureDate/returnDate, destinations, and activity interests.
+    Uses claude-sonnet-4-6 and returns only a JSON object matching PromptResponseModel.
+    """
+    ...
+```
+
+Apply the same pattern to every route using these tag assignments:
+
+| Route | Tag |
+|---|---|
+| `GET /users` | `users` |
+| `POST /prompt` | `prompt` |
+| `POST /suggestions` | `suggestions` |
+| `POST /destPackage` | `packages` |
+| `GET /destPackage` | `packages` |
+
+### 3. Pydantic field descriptions and examples
+
+Add `Field(description=..., examples=[...])` to every field in every model. Import `Field` from `pydantic`.
+
+```python
+from pydantic import BaseModel, Field
+
+class PromptRequestModel(BaseModel):
+    message: str = Field(
+        ...,
+        description="Free-text natural-language travel request from the user",
+        examples=["I want to visit Paris and Rome for 10 days in July, I love food and museums"],
+    )
+```
+
+Apply to **all** fields in `service/models/travel.py` and `service/models/user.py`. Use realistic example values that match the field's type and purpose.
+
+### 4. Verifying the output
+
+Start the server and open `http://localhost:8000/docs`. You should see:
+- A top-level description with the markdown flow overview.
+- Four tag groups: **users**, **prompt**, **suggestions**, **packages**.
+- Each endpoint showing its summary, long description, request schema with field descriptions and examples, and response schema.
+
+---
+
 ## Conventions
 
 | Rule | Detail |
@@ -251,3 +343,4 @@ Returns all saved destination packages.
 | CORS | Add `CORSMiddleware` with `allow_origins=["*"]` for local frontend dev |
 | In-memory state | Module-level lists initialized at startup via `lifespan` |
 | No auth | Skip all authentication for the hackathon demo |
+| Swagger docs | Enrich `FastAPI(...)` with `title`, `description`, `version`, `openapi_tags`; add `tags`/`summary`/`response_description` to every route; add `Field(description, examples)` to every Pydantic field |
