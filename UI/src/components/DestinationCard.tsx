@@ -1,4 +1,5 @@
 import type { DestinationPackage } from "../types/trip";
+import { PackagePicture } from "./PackagePicture";
 
 type DestinationCardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   destination: DestinationPackage;
@@ -14,10 +15,9 @@ export function DestinationCard({
       type="button"
       className="flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-sm transition hover:border-brand-blue hover:shadow-md"
     >
-      <img
+      <PackagePicture
         src={destination.picture}
         alt={destination.destinationName}
-        loading="lazy"
         className="h-20 w-20 flex-shrink-0 rounded-xl object-cover"
       />
       <div className="flex flex-1 flex-col">

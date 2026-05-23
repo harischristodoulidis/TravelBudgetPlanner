@@ -1,35 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { TotalPill } from "../components/TotalPill";
 import { TripItemRow } from "../components/TripItemRow";
 import { usePlannedTrips } from "../context/PlannedTripsContext";
 import { useTrip } from "../context/TripContext";
 import { bookTrip } from "../services/bookings";
-import { getDestinationPackageBySlug } from "../services/destinations";
-import type { DestinationPackage } from "../types/trip";
+import { slugify } from "../utils/slug";
 
 export function TripDetailsScreen() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const trip = useTrip();
-  const { addPlannedTrip, plannedTrips } = usePlannedTrips();
-  const [pkg, setPkg] = useState<DestinationPackage | null | undefined>(
-    undefined,
-  );
-
-  useEffect(() => {
-    if (!slug) return;
-    getDestinationPackageBySlug(slug).then((p) => setPkg(p ?? null));
-  }, [slug]);
+  const { addPlannedTrip, plannedTrips, removePlannedTrip } = usePlannedTrips();
+  const [booking, setBooking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const plannedTrip = plannedTrips.find((t) => t.id === slug);
+  const suggested = trip.lastResults?.destinationPackages.find(
+    (p) => slugify(p.destinationName) === slug,
+  );
+  const pkg = plannedTrip?.destinationPackage ?? suggested ?? null;
   const travelers = plannedTrip ? plannedTrip.people : trip.people;
 
-  if (pkg === undefined) {
-    return <div className="p-6 text-sm text-slate-500">Loading…</div>;
-  }
-
-  if (pkg === null || !slug) {
+  if (!slug || !pkg) {
     return <Navigate to="/" replace />;
   }
 
@@ -117,23 +110,64 @@ export function TripDetailsScreen() {
       ))}
 
       {plannedTrip ? (
-        <button
-          type="button"
-          onClick={async () => {
-            await bookTrip({
-              id: plannedTrip.id,
-              destinationPackage: plannedTrip.destinationPackage,
-              people: plannedTrip.people,
-              prompt: plannedTrip.prompt,
-              savedAt: plannedTrip.savedAt,
-              bookedAt: Date.now(),
-            });
-            alert("Trip booked!");
-          }}
-          className="self-center rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90"
-        >
-          Book trip
-        </button>
+        <>
+          <button
+            type="button"
+            disabled={booking}
+            onClick={async () => {
+              setBooking(true);
+              setError(null);
+              try {
+                await Promise.all([
+                  bookTrip({
+                    id: plannedTrip.id,
+                    destinationPackage: plannedTrip.destinationPackage,
+                    people: plannedTrip.people,
+                    prompt: plannedTrip.prompt,
+                    savedAt: plannedTrip.savedAt,
+                    bookedAt: Date.now(),
+                  }),
+                  new Promise((resolve) => setTimeout(resolve, 1000)),
+                ]);
+                removePlannedTrip(plannedTrip.id);
+                navigate("/");
+              } catch {
+                setError("Could not book trip. Please try again.");
+                setBooking(false);
+              }
+            }}
+            className="self-center flex items-center justify-center min-w-[110px] rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:opacity-80"
+          >
+            {booking ? (
+              <svg
+                className="h-4 w-4 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeOpacity="0.25"
+                  strokeWidth="4"
+                />
+                <path
+                  d="M22 12a10 10 0 0 1-10 10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </svg>
+            ) : (
+              "Book trip"
+            )}
+          </button>
+          {error && (
+            <p className="self-center text-sm text-red-500">{error}</p>
+          )}
+        </>
       ) : (
         <button
           type="button"

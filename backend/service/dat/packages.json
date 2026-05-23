@@ -171,5 +171,178 @@
         ]
       }
     ]
+  },
+  {
+    "destinationName": "Nordic Lights",
+    "totalPrice": "3200",
+    "description": "Chase the aurora across Reykjavik and Tromsø with glaciers, fjords, and long winter nights.",
+    "picture": "https://images.unsplash.com/photo-1483347756197-71ef80e95f73",
+    "destinationsList": [
+      {
+        "name": "Iceland",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Reykjavik",
+            "transportationType": "Flight",
+            "price": "320"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Reykjavik",
+            "country": "Iceland",
+            "accommodation": {
+              "name": "Harbor Edge Hotel",
+              "price": "190"
+            },
+            "activityDetails": [
+              { "name": "Golden Circle Tour", "price": "95" },
+              { "name": "Blue Lagoon Entry", "price": "85" },
+              { "name": "Northern Lights Hunt", "price": "70" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Norway",
+        "transportation": [
+          {
+            "departure": "Reykjavik",
+            "arrival": "Tromsø",
+            "transportationType": "Flight",
+            "price": "240"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Tromsø",
+            "country": "Norway",
+            "accommodation": {
+              "name": "Polar Fjord Lodge",
+              "price": "175"
+            },
+            "activityDetails": [
+              { "name": "Dog Sledding Day", "price": "180" },
+              { "name": "Arctic Cathedral Visit", "price": "8" },
+              { "name": "Fjord Cruise", "price": "115" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "destinationName": "Balkan Trail",
+    "totalPrice": "1450",
+    "description": "Adriatic coastlines and old-town nights from Split to Tirana.",
+    "picture": "https://images.unsplash.com/photo-1555990538-32308a6ef33a",
+    "destinationsList": [
+      {
+        "name": "Croatia",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Split",
+            "transportationType": "Flight",
+            "price": "140"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Split",
+            "country": "Croatia",
+            "accommodation": {
+              "name": "Diocletian Walls Guesthouse",
+              "price": "85"
+            },
+            "activityDetails": [
+              { "name": "Diocletian's Palace Tour", "price": "18" },
+              { "name": "Hvar Island Day Trip", "price": "55" },
+              { "name": "Marjan Hill Hike", "price": "0" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Albania",
+        "transportation": [
+          {
+            "departure": "Split",
+            "arrival": "Tirana",
+            "transportationType": "Bus",
+            "price": "45"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Tirana",
+            "country": "Albania",
+            "accommodation": {
+              "name": "Block Boutique Stay",
+              "price": "55"
+            },
+            "activityDetails": [
+              { "name": "Bunk'Art Museum", "price": "8" },
+              { "name": "Dajti Express Cable Car", "price": "10" },
+              { "name": "Pazari i Ri Food Walk", "price": "25" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "destinationName": "Moroccan Coast",
+    "totalPrice": "1700",
+    "description": "Atlantic sea breeze in Casablanca and souks of Marrakech.",
+    "picture": "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43",
+    "destinationsList": [
+      {
+        "name": "Morocco",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Casablanca",
+            "transportationType": "Flight",
+            "price": "260"
+          },
+          {
+            "departure": "Casablanca",
+            "arrival": "Marrakech",
+            "transportationType": "Train",
+            "price": "25"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Casablanca",
+            "country": "Morocco",
+            "accommodation": {
+              "name": "Corniche Sea View",
+              "price": "95"
+            },
+            "activityDetails": [
+              { "name": "Hassan II Mosque Tour", "price": "14" },
+              { "name": "Old Medina Walk", "price": "0" },
+              { "name": "Atlantic Sunset Dinner", "price": "40" }
+            ]
+          },
+          {
+            "name": "Marrakech",
+            "country": "Morocco",
+            "accommodation": {
+              "name": "Riad Jasmine",
+              "price": "80"
+            },
+            "activityDetails": [
+              { "name": "Jemaa el-Fnaa Night Tour", "price": "20" },
+              { "name": "Majorelle Garden", "price": "12" },
+              { "name": "Atlas Mountains Day Trip", "price": "65" }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

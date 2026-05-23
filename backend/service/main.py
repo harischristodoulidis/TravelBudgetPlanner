@@ -1,30 +1,27 @@
+import json
 from contextlib import asynccontextmanager
 from datetime import datetime
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models.travel import (
-    AccommodationDetails,
-    ActivityDetails,
-    City,
-    Destination,
     DestinationPackage,
     PromptRequestModel,
     PromptResponseModel,
     Summary,
-    Transportation,
-    TransportationType,
 )
 from .models.user import User
 
 users: list[User] = []
 dest_packages: list[DestinationPackage] = []
+seed_packages: list[DestinationPackage] = []
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global users
+    global users, seed_packages
     users = [
         User(
             userId="u1",
@@ -45,6 +42,10 @@ async def lifespan(app: FastAPI):
             createdAt=datetime(2024, 1, 2),
         ),
     ]
+    packages_path = Path(__file__).parent / "dat" / "packages.json"
+    with packages_path.open(encoding="utf-8") as f:
+        raw_packages = json.load(f)
+    seed_packages = [DestinationPackage.model_validate(p) for p in raw_packages]
     yield
 
 
@@ -156,61 +157,7 @@ def post_suggestions(body: PromptResponseModel):
 
     Uses the `claude-sonnet-4-6` model with a system prompt that enforces strict JSON output.
     """
-    mock_package = DestinationPackage(
-        destinationName="Paris & Rome Explorer",
-        totalPrice="$3200",
-        description="A curated 10-day food and culture trip through Paris and Rome.",
-        picture="https://images.unsplash.com/photo-1499856871958-5b9627545d1a",
-        destinationsList=[
-            Destination(
-                name="Paris",
-                cities=[
-                    City(
-                        name="Paris",
-                        country="France",
-                        accommodation=AccommodationDetails(name="Hotel Le Marais", price="$150/night"),
-                        activityDetails=[
-                            ActivityDetails(name="Louvre Museum", price="$20"),
-                            ActivityDetails(name="Eiffel Tower", price="$30"),
-                            ActivityDetails(name="French Cooking Class", price="$80"),
-                        ],
-                    )
-                ],
-                transportation=[
-                    Transportation(
-                        departure="New York JFK",
-                        arrival="Paris CDG",
-                        transportationType=TransportationType.flight,
-                        price="$650",
-                    )
-                ],
-            ),
-            Destination(
-                name="Rome",
-                cities=[
-                    City(
-                        name="Rome",
-                        country="Italy",
-                        accommodation=AccommodationDetails(name="Hotel Colosseo", price="$130/night"),
-                        activityDetails=[
-                            ActivityDetails(name="Colosseum Tour", price="$25"),
-                            ActivityDetails(name="Vatican Museums", price="$35"),
-                            ActivityDetails(name="Italian Food Tour", price="$60"),
-                        ],
-                    )
-                ],
-                transportation=[
-                    Transportation(
-                        departure="Paris CDG",
-                        arrival="Rome FCO",
-                        transportationType=TransportationType.flight,
-                        price="$180",
-                    )
-                ],
-            ),
-        ],
-    )
-    return Summary(summary=[mock_package])
+    return Summary(summary=seed_packages)
 
 
 @app.post(
