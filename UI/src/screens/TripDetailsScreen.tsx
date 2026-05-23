@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { PackagePicture } from "../components/PackagePicture";
 import { TotalPill } from "../components/TotalPill";
 import { TripItemRow } from "../components/TripItemRow";
 import { useTrip } from "../context/TripContext";
@@ -47,31 +48,42 @@ export function TripDetailsScreen() {
         ← Back
       </button>
 
-      <header className="text-center">
-        <h1 className="text-3xl font-bold text-slate-800">
-          {pkg.destinationName}
-        </h1>
-        {pkg.description && (
-          <p className="text-sm text-slate-500">{pkg.description}</p>
-        )}
-        {travelers.length > 0 && (
-          <div className="mt-3 flex flex-col items-center gap-2">
-            <span className="text-base font-bold uppercase tracking-wider text-brand-blue">
-              Travelers
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              {travelers.map((p, idx) => (
-                <span
-                  key={`${p.name}-${idx}`}
-                  className="rounded-full bg-brand-blue-soft px-4 py-1.5 text-base font-semibold text-brand-blue shadow-sm"
-                >
-                  {p.name}
-                </span>
-              ))}
-            </div>
+      <div className="relative aspect-video w-full overflow-hidden rounded-3xl shadow-sm">
+        <PackagePicture
+          src={pkg.picture}
+          alt={pkg.destinationName}
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+          <h1 className="text-3xl font-bold drop-shadow">
+            {pkg.destinationName}
+          </h1>
+          {pkg.description && (
+            <p className="mt-1 text-sm text-white/85 drop-shadow">
+              {pkg.description}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {travelers.length > 0 && (
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-base font-bold uppercase tracking-wider text-brand-blue">
+            Travelers
+          </span>
+          <div className="flex flex-wrap justify-center gap-2">
+            {travelers.map((p, idx) => (
+              <span
+                key={`${p.name}-${idx}`}
+                className="rounded-full bg-brand-blue-soft px-4 py-1.5 text-base font-semibold text-brand-blue shadow-sm"
+              >
+                {p.name}
+              </span>
+            ))}
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       <TotalPill total={pkg.totalPrice} />
 
@@ -140,7 +152,7 @@ export function TripDetailsScreen() {
                 setPlanning(false);
               }
             }}
-            className="self-center flex items-center justify-center min-w-[110px] rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:opacity-80"
+            className="self-center flex items-center justify-center min-w-27.5 rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:opacity-80"
           >
             {planning ? (
               <svg
