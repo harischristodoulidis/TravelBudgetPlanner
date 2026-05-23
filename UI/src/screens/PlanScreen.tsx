@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddPeopleButton } from "../components/AddPeopleButton";
-import { BookedTripCard } from "../components/BookedTripCard";
+import { ConfirmModal } from "../components/ConfirmModal";
 import { ContactsModal } from "../components/ContactsModal";
 import { DestinationCard } from "../components/DestinationCard";
 import { PersonPill } from "../components/PersonPill";
 import { PlannedTripCard } from "../components/PlannedTripCard";
 import { PromptInput } from "../components/PromptInput";
-import { usePlannedTrips } from "../context/PlannedTripsContext";
 import { useSession } from "../context/SessionContext";
 import { useTrip } from "../context/TripContext";
 import {
+  deleteDestPackage,
   fetchDestPackages,
   postPrompt,
   postSuggestions,
@@ -22,17 +22,18 @@ export function PlanScreen() {
   const navigate = useNavigate();
   const trip = useTrip();
   const { user } = useSession();
-  const { plannedTrips, removePlannedTrip } = usePlannedTrips();
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
-  const [bookedPackages, setBookedPackages] = useState<DestinationPackage[]>(
+  const [plannedPackages, setPlannedPackages] = useState<DestinationPackage[]>(
     [],
   );
+  const [pendingRemoval, setPendingRemoval] =
+    useState<DestinationPackage | null>(null);
 
   useEffect(() => {
     fetchDestPackages()
-      .then(setBookedPackages)
+      .then(setPlannedPackages)
       .catch(() => {});
   }, []);
 
@@ -58,47 +59,44 @@ export function PlanScreen() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5 p-6">
-      {bookedPackages.length > 0 && (
-        <section>
-          <h2 className="mb-2 text-sm font-semibold text-slate-600">
-            Booked trips
-          </h2>
-          <div className="flex flex-col gap-2">
-            {bookedPackages.map((pkg, i) => (
-              <BookedTripCard key={`${pkg.destinationName}-${i}`} pkg={pkg} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {plannedTrips.length > 0 && (
+      {plannedPackages.length > 0 && (
         <section>
           <h2 className="mb-2 text-sm font-semibold text-slate-600">
             Planned trips
           </h2>
           <div className="flex flex-col gap-2">
-            {plannedTrips.map((t) => (
+            {plannedPackages.map((pkg, i) => (
               <PlannedTripCard
-                key={t.id}
-                trip={t}
-                onClick={() => navigate(`/trip/${t.id}`)}
-                onRemove={() => removePlannedTrip(t.id)}
+                key={`${pkg.destinationName}-${i}`}
+                pkg={pkg}
+                onClick={() =>
+                  navigate(`/trip/${slugify(pkg.destinationName)}`)
+                }
+                onRemove={() => setPendingRemoval(pkg)}
               />
             ))}
           </div>
         </section>
       )}
 
-      <div>
-        <AddPeopleButton onClick={() => setModalOpen(true)} />
+      <div className="flex flex-col gap-2">
+        <div>
+          <h2 className="text-base font-semibold text-slate-800">
+            Plan your next trip
+          </h2>
+          <p className="text-sm text-slate-500">
+            Tell us where you'd like to go, who's coming, and your budget — we'll
+            suggest destinations that fit.
+          </p>
+        </div>
+        <PromptInput
+          value={trip.prompt}
+          onChange={trip.setPrompt}
+          onSubmit={handleSubmit}
+          disabled={submitting}
+          leftSlot={<AddPeopleButton onClick={() => setModalOpen(true)} />}
+        />
       </div>
-
-      <PromptInput
-        value={trip.prompt}
-        onChange={trip.setPrompt}
-        onSubmit={handleSubmit}
-        disabled={submitting}
-      />
 
       <div className="flex flex-wrap gap-2">
         {trip.people.map((person) => {
@@ -150,6 +148,30 @@ export function PlanScreen() {
           onConfirm={(people) => {
             trip.addPeople(people);
             setModalOpen(false);
+          }}
+        />
+      )}
+
+      {pendingRemoval && (
+        <ConfirmModal
+          title="Remove planned trip"
+          message={`Remove "${pendingRemoval.destinationName}" from your planned trips?`}
+          onCancel={() => setPendingRemoval(null)}
+          onConfirm={async () => {
+            const target = pendingRemoval;
+            setPendingRemoval(null);
+            try {
+              await deleteDestPackage(target.destinationName);
+              setPlannedPackages((prev) =>
+                prev.filter(
+                  (p) => p.destinationName !== target.destinationName,
+                ),
+              );
+            } catch {
+              fetchDestPackages()
+                .then(setPlannedPackages)
+                .catch(() => {});
+            }
           }}
         />
       )}

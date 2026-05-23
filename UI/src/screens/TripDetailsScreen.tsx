@@ -1,26 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { TotalPill } from "../components/TotalPill";
 import { TripItemRow } from "../components/TripItemRow";
-import { usePlannedTrips } from "../context/PlannedTripsContext";
 import { useTrip } from "../context/TripContext";
-import { bookTrip } from "../services/bookings";
+import { fetchDestPackages, postDestPackage } from "../services/api";
+import type { DestinationPackage } from "../types/trip";
 import { slugify } from "../utils/slug";
 
 export function TripDetailsScreen() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const trip = useTrip();
-  const { addPlannedTrip, plannedTrips, removePlannedTrip } = usePlannedTrips();
-  const [booking, setBooking] = useState(false);
+  const [plannedPackages, setPlannedPackages] = useState<DestinationPackage[]>(
+    [],
+  );
+  const [planning, setPlanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const plannedTrip = plannedTrips.find((t) => t.id === slug);
+  useEffect(() => {
+    fetchDestPackages()
+      .then(setPlannedPackages)
+      .catch(() => {});
+  }, []);
+
+  const planned = plannedPackages.find(
+    (p) => slugify(p.destinationName) === slug,
+  );
   const suggested = trip.lastResults?.destinationPackages.find(
     (p) => slugify(p.destinationName) === slug,
   );
-  const pkg = plannedTrip?.destinationPackage ?? suggested ?? null;
-  const travelers = plannedTrip ? plannedTrip.people : trip.people;
+  const pkg = planned ?? suggested ?? null;
+  const isPlanned = !!planned;
+  const travelers = isPlanned ? [] : trip.people;
 
   if (!slug || !pkg) {
     return <Navigate to="/" replace />;
@@ -109,36 +120,29 @@ export function TripDetailsScreen() {
         </section>
       ))}
 
-      {plannedTrip ? (
+      {!isPlanned && (
         <>
           <button
             type="button"
-            disabled={booking}
+            disabled={planning}
             onClick={async () => {
-              setBooking(true);
+              setPlanning(true);
               setError(null);
               try {
                 await Promise.all([
-                  bookTrip({
-                    id: plannedTrip.id,
-                    destinationPackage: plannedTrip.destinationPackage,
-                    people: plannedTrip.people,
-                    prompt: plannedTrip.prompt,
-                    savedAt: plannedTrip.savedAt,
-                    bookedAt: Date.now(),
-                  }),
+                  postDestPackage(pkg),
                   new Promise((resolve) => setTimeout(resolve, 1000)),
                 ]);
-                removePlannedTrip(plannedTrip.id);
+                trip.reset();
                 navigate("/");
               } catch {
-                setError("Could not book trip. Please try again.");
-                setBooking(false);
+                setError("Could not save trip. Please try again.");
+                setPlanning(false);
               }
             }}
             className="self-center flex items-center justify-center min-w-[110px] rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:opacity-80"
           >
-            {booking ? (
+            {planning ? (
               <svg
                 className="h-4 w-4 animate-spin"
                 viewBox="0 0 24 24"
@@ -161,31 +165,13 @@ export function TripDetailsScreen() {
                 />
               </svg>
             ) : (
-              "Book trip"
+              "Plan trip"
             )}
           </button>
           {error && (
             <p className="self-center text-sm text-red-500">{error}</p>
           )}
         </>
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            addPlannedTrip({
-              id: slug,
-              destinationPackage: pkg,
-              people: trip.people,
-              prompt: trip.prompt,
-              savedAt: Date.now(),
-            });
-            trip.reset();
-            navigate("/");
-          }}
-          className="self-center rounded-full bg-brand-blue px-6 py-2 text-sm font-semibold text-white shadow-sm transition cursor-pointer hover:bg-brand-blue/90"
-        >
-          Plan trip
-        </button>
       )}
     </div>
   );
