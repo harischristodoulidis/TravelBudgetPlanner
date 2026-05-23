@@ -11,6 +11,17 @@
         "currency": "EUR"
     },
     {
+        "type": "B&B",
+        "company": "Airbnb",
+        "city": "Rome",
+        "name": "Mario and Luigi Brothers",
+        "destination": "Rome",
+        "arrival_date": "2026-08-01",
+        "departure_date": "2026-08-05",
+        "price": 240,
+        "currency": "EUR"
+    },
+    {
         "type": "hotel",
         "company": "Booking.com",
         "city": "Rome",
@@ -24,23 +35,12 @@
     {
         "type": "hotel",
         "company": "Booking.com",
-        "city": "Rome",
-        "name": "Hotel Luxor",
-        "destination": "Rome",
-        "arrival_date": "2026-08-01",
-        "departure_date": "2026-08-05",
-        "price": 480,
-        "currency": "EUR"
-    },
-    {
-        "type": "hostel",
-        "company": "Hostelworld",
         "city": "Florence",
-        "name": "Plus Florence",
+        "name": "Hotel Michelangelo",
         "destination": "Florence",
         "arrival_date": "2026-08-01",
         "departure_date": "2026-08-05",
-        "price": 120,
+        "price": 450,
         "currency": "EUR"
     },
     {
@@ -66,14 +66,14 @@
         "currency": "EUR"
     },
     {
-        "type": "hostel",
-        "company": "Hostelworld",
+        "type": "B&B",
+        "company": "Airbnb",
         "city": "Athens",
-        "name": "Athens Backpackers",
+        "name": "Plaka Vibes Suite",
         "destination": "Athens",
         "arrival_date": "2026-08-01",
         "departure_date": "2026-08-05",
-        "price": 90,
+        "price": 525,
         "currency": "EUR"
     },
     {
