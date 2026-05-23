@@ -1,0 +1,175 @@
+[
+  {
+    "destinationName": "European Highlights",
+    "totalPrice": "2850",
+    "description": "A scenic journey through Paris and Rome covering art, cuisine, and culture.",
+    "picture": "https://images.unsplash.com/photo-1499856843078-a8c50d4e3d32",
+    "destinationsList": [
+      {
+        "name": "France",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Paris",
+            "transportationType": "Flight",
+            "price": "180"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Paris",
+            "country": "France",
+            "accommodation": {
+              "name": "Hotel Le Marais",
+              "price": "120"
+            },
+            "activityDetails": [
+              { "name": "Eiffel Tower", "price": "25" },
+              { "name": "Louvre Museum", "price": "17" },
+              { "name": "Seine River Cruise", "price": "15" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Italy",
+        "transportation": [
+          {
+            "departure": "Paris",
+            "arrival": "Rome",
+            "transportationType": "Train",
+            "price": "95"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Rome",
+            "country": "Italy",
+            "accommodation": {
+              "name": "Colosseo Boutique Hotel",
+              "price": "110"
+            },
+            "activityDetails": [
+              { "name": "Colosseum Tour", "price": "18" },
+              { "name": "Vatican Museums", "price": "20" },
+              { "name": "Trevi Fountain Area Walk", "price": "0" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "destinationName": "Iberian Adventure",
+    "totalPrice": "1950",
+    "description": "Explore the vibrant cities of Barcelona and Lisbon.",
+    "picture": "https://images.unsplash.com/photo-1539037116277-4db20889f2d4",
+    "destinationsList": [
+      {
+        "name": "Spain",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Barcelona",
+            "transportationType": "Flight",
+            "price": "160"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Barcelona",
+            "country": "Spain",
+            "accommodation": {
+              "name": "Gothic Quarter Inn",
+              "price": "95"
+            },
+            "activityDetails": [
+              { "name": "Sagrada Familia", "price": "26" },
+              { "name": "Park Güell", "price": "10" },
+              { "name": "Camp Nou Stadium Tour", "price": "28" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Portugal",
+        "transportation": [
+          {
+            "departure": "Barcelona",
+            "arrival": "Lisbon",
+            "transportationType": "Flight",
+            "price": "75"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Lisbon",
+            "country": "Portugal",
+            "accommodation": {
+              "name": "Alfama View Hostel",
+              "price": "60"
+            },
+            "activityDetails": [
+              { "name": "Belém Tower", "price": "6" },
+              { "name": "Jerónimos Monastery", "price": "10" },
+              { "name": "Fado Night Show", "price": "35" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "destinationName": "Aegean Escape",
+    "totalPrice": "1200",
+    "description": "A relaxing island-hopping trip across the Greek Aegean.",
+    "picture": "https://images.unsplash.com/photo-1533105079780-92b9be482077",
+    "destinationsList": [
+      {
+        "name": "Greece",
+        "transportation": [
+          {
+            "departure": "Athens",
+            "arrival": "Santorini",
+            "transportationType": "Flight",
+            "price": "80"
+          },
+          {
+            "departure": "Santorini",
+            "arrival": "Mykonos",
+            "transportationType": "Bus",
+            "price": "40"
+          }
+        ],
+        "cities": [
+          {
+            "name": "Santorini",
+            "country": "Greece",
+            "accommodation": {
+              "name": "Caldera Cliffside Suites",
+              "price": "150"
+            },
+            "activityDetails": [
+              { "name": "Oia Sunset Walk", "price": "0" },
+              { "name": "Akrotiri Archaeological Site", "price": "12" },
+              { "name": "Catamaran Cruise", "price": "85" }
+            ]
+          },
+          {
+            "name": "Mykonos",
+            "country": "Greece",
+            "accommodation": {
+              "name": "Little Venice Studios",
+              "price": "130"
+            },
+            "activityDetails": [
+              { "name": "Windmills of Kato Mili", "price": "0" },
+              { "name": "Delos Island Day Trip", "price": "20" },
+              { "name": "Paradise Beach Club", "price": "15" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
