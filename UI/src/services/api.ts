@@ -68,3 +68,12 @@ export function postDestPackage(
 export function fetchDestPackages(): Promise<DestinationPackage[]> {
   return request<DestinationPackage[]>("/destPackage");
 }
+
+export function deleteDestPackage(
+  destinationName: string,
+): Promise<{ status: string; removed: number }> {
+  return request<{ status: string; removed: number }>(
+    `/destPackage/${encodeURIComponent(destinationName)}`,
+    { method: "DELETE" },
+  );
+}

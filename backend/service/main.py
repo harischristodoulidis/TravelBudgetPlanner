@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
             passwordHash="hashed_password_1",
             firstName="John",
             lastName="Doe",
-            friendIds=["u2"],
+            friendIds=["u2", "u3", "u5"],
             createdAt=datetime(2024, 1, 1),
         ),
         User(
@@ -38,8 +38,62 @@ async def lifespan(app: FastAPI):
             passwordHash="hashed_password_2",
             firstName="Jane",
             lastName="Smith",
-            friendIds=["u1"],
+            friendIds=["u1", "u4"],
             createdAt=datetime(2024, 1, 2),
+        ),
+        User(
+            userId="u3",
+            username="mgarcia",
+            passwordHash="hashed_password_3",
+            firstName="Maria",
+            lastName="Garcia",
+            friendIds=["u1", "u4", "u6"],
+            createdAt=datetime(2024, 1, 5),
+        ),
+        User(
+            userId="u4",
+            username="achen",
+            passwordHash="hashed_password_4",
+            firstName="Alex",
+            lastName="Chen",
+            friendIds=["u2", "u3", "u7"],
+            createdAt=datetime(2024, 1, 8),
+        ),
+        User(
+            userId="u5",
+            username="spapadopoulos",
+            passwordHash="hashed_password_5",
+            firstName="Sophia",
+            lastName="Papadopoulos",
+            friendIds=["u1", "u6"],
+            createdAt=datetime(2024, 1, 12),
+        ),
+        User(
+            userId="u6",
+            username="lokafor",
+            passwordHash="hashed_password_6",
+            firstName="Liam",
+            lastName="Okafor",
+            friendIds=["u3", "u5", "u8"],
+            createdAt=datetime(2024, 1, 15),
+        ),
+        User(
+            userId="u7",
+            username="npatel",
+            passwordHash="hashed_password_7",
+            firstName="Nina",
+            lastName="Patel",
+            friendIds=["u4", "u8"],
+            createdAt=datetime(2024, 1, 20),
+        ),
+        User(
+            userId="u8",
+            username="tmuller",
+            passwordHash="hashed_password_8",
+            firstName="Tomas",
+            lastName="Muller",
+            friendIds=["u6", "u7"],
+            createdAt=datetime(2024, 1, 25),
         ),
     ]
     packages_path = Path(__file__).parent / "dat" / "packages.json"
@@ -190,3 +244,17 @@ def get_dest_packages():
     The list is empty on a fresh server start and grows as packages are posted.
     """
     return dest_packages
+
+
+@app.delete(
+    "/destPackage/{name}",
+    tags=["packages"],
+    summary="Delete saved destination packages by name",
+    response_description='{"status": "ok", "removed": <count>}',
+)
+def delete_dest_package(name: str):
+    """Remove every saved package whose `destinationName` matches `name`."""
+    global dest_packages
+    before = len(dest_packages)
+    dest_packages = [p for p in dest_packages if p.destinationName != name]
+    return {"status": "ok", "removed": before - len(dest_packages)}
