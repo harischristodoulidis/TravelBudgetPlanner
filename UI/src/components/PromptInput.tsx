@@ -17,7 +17,7 @@ export function PromptInput({ value, onChange, onSubmit, disabled = false, leftS
           onChange={(e) => onChange(e.target.value)}
           placeholder="Describe your dream trip…"
           rows={6}
-          className="w-full resize-none rounded-2xl bg-transparent p-4 text-sm leading-relaxed text-slate-700 outline-none placeholder:text-slate-400"
+          className="w-full resize-none rounded-2xl bg-transparent p-4 text-base leading-relaxed text-slate-700 outline-none placeholder:text-slate-400"
         />
       </div>
       <div className="flex items-center justify-between gap-3">

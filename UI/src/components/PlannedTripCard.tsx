@@ -17,20 +17,17 @@ export function PlannedTripCard({
       <button
         type="button"
         onClick={onClick}
-        className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2.5 pr-10 text-left shadow-sm transition hover:border-brand-blue hover:shadow-md"
+        className="flex w-full items-center gap-3 overflow-hidden rounded-2xl border border-slate-200 bg-white py-0 pl-0 pr-10 text-left shadow-sm transition hover:border-brand-blue hover:shadow-md"
       >
         <PackagePicture
           src={pkg.picture}
           alt={pkg.destinationName}
-          className="h-10 w-10 flex-shrink-0 rounded-lg object-cover"
+          className="h-14 w-14 flex-shrink-0 object-cover"
         />
         <div className="flex flex-1 flex-col">
           <span className="text-sm font-semibold text-slate-800">
             {pkg.destinationName}
           </span>
-          {pkg.description && (
-            <span className="text-xs text-slate-500">{pkg.description}</span>
-          )}
         </div>
         <span className="text-sm font-semibold text-slate-800">
           € {pkg.totalPrice}

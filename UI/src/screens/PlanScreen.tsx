@@ -24,7 +24,6 @@ export function PlanScreen() {
   const { user } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(3);
   const [plannedPackages, setPlannedPackages] = useState<DestinationPackage[]>(
     [],
   );
@@ -47,24 +46,22 @@ export function PlanScreen() {
         summary: "Hello, here are some trips that might fit your group.",
         destinationPackages: packages,
       });
-      setVisibleCount(3);
     } finally {
       setSubmitting(false);
     }
   }
 
   const destinationPackages = trip.lastResults?.destinationPackages ?? [];
-  const visible = destinationPackages.slice(0, visibleCount);
-  const hasMore = destinationPackages.length > visibleCount;
+  const visible = destinationPackages.slice(0, 10);
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-5 p-6">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-5 p-6 md:max-w-6xl">
       {plannedPackages.length > 0 && (
         <section>
           <h2 className="mb-2 text-sm font-semibold text-slate-600">
             Planned trips
           </h2>
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {plannedPackages.map((pkg, i) => (
               <PlannedTripCard
                 key={`${pkg.destinationName}-${i}`}
@@ -81,10 +78,10 @@ export function PlanScreen() {
 
       <div className="flex flex-col gap-2">
         <div>
-          <h2 className="text-base font-semibold text-slate-800">
+          <h2 className="text-xl font-semibold text-slate-800">
             Plan your next trip
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-base text-slate-500">
             Tell us where you'd like to go, who's coming, and your budget — we'll
             suggest destinations that fit.
           </p>
@@ -116,7 +113,7 @@ export function PlanScreen() {
         <>
           <p className="text-sm text-slate-600">{trip.lastResults.summary}</p>
 
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {visible.map((d) => {
               const slug = slugify(d.destinationName);
               return (
@@ -128,16 +125,6 @@ export function PlanScreen() {
               );
             })}
           </div>
-
-          {hasMore && (
-            <button
-              type="button"
-              onClick={() => setVisibleCount((c) => c + 3)}
-              className="self-center rounded-full border border-brand-blue px-5 py-2 text-sm font-semibold text-brand-blue transition cursor-pointer hover:bg-brand-blue hover:text-white"
-            >
-              Add more
-            </button>
-          )}
         </>
       )}
 
