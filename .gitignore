@@ -3,6 +3,8 @@ dist
 dist-ssr
 *.local
 
+ backend/service/models/__pycache__
+
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
