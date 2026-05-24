@@ -17,16 +17,10 @@ logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(n
 logger = logging.getLogger(__name__)
 
 from .models.travel import (
-    AccommodationDetails,
-    ActivityDetails,
-    City,
-    Destination,
     DestinationPackage,
     PromptRequestModel,
     PromptResponseModel,
     Summary,
-    Transportation,
-    TransportationType,
 )
 from .models.user import User
 
@@ -298,6 +292,23 @@ def post_prompt(body: PromptRequestModel):
         raise HTTPException(status_code=502, detail=f"Gemini API error: {e}")
 
 
+_TRANSPORT_TYPE_MAP = {"airplane": "Flight", "flight": "Flight", "train": "Train", "bus": "Bus"}
+
+
+def _normalize_package(raw: dict) -> dict:
+    """Fix any field values in a raw package dict that would fail Pydantic validation."""
+    for dest in raw.get("destinationsList", []):
+        for leg in dest.get("transportation", []):
+            leg["transportationType"] = _TRANSPORT_TYPE_MAP.get(
+                leg.get("transportationType", "").lower(),
+                leg.get("transportationType", "Flight"),
+            )
+        for city in dest.get("cities", []):
+            if not city.get("country"):
+                city["country"] = city.get("name", "")
+    return raw
+
+
 @app.post(
     "/suggestions",
     response_model=Summary,
@@ -306,78 +317,73 @@ def post_prompt(body: PromptRequestModel):
     response_description="Summary object containing one or more DestinationPackage options",
 )
 def post_suggestions(body: PromptResponseModel):
-    """Generate curated travel packages for a structured trip intent using Claude AI.
+    """Return a filtered DestinationPackage built from the claudio-generated package.
 
-    Accepts the output of **POST /prompt** (or any manually constructed `PromptResponseModel`)
-    and asks the LLM to produce a `Summary` containing one or more `DestinationPackage` objects.
-
-    Each package includes:
-    - Nested `Destination → City → AccommodationDetails / ActivityDetails` objects.
-    - A `totalPrice` estimate and a cover `picture` URL.
-
-    Uses the `claude-sonnet-4-6` model with a system prompt that enforces strict JSON output.
+    Loads ``backend/worker/claudio/output/package.json``, then asks Gemini to pick
+    which destinations best match the user's requested destinations and activities.
+    Returns a Summary with one package containing only the selected destinations.
     """
     logger.info(
-        "POST /suggestions: generating packages for destinations=%s activities=%s departure=%s return=%s",
+        "POST /suggestions: destinations=%s activities=%s departure=%s return=%s",
         body.destinations, body.activities, body.departureDate, body.returnDate,
     )
-    logger.debug("Building mock destination package")
-    mock_package = DestinationPackage(
-        destinationName="Paris & Rome Explorer",
-        totalPrice="$3200",
-        description="A curated 10-day food and culture trip through Paris and Rome.",
-        picture="https://images.unsplash.com/photo-1499856871958-5b9627545d1a",
-        destinationsList=[
-            Destination(
-                name="Paris",
-                cities=[
-                    City(
-                        name="Paris",
-                        country="France",
-                        accommodation=AccommodationDetails(name="Hotel Le Marais", price="$150/night"),
-                        activityDetails=[
-                            ActivityDetails(name="Louvre Museum", price="$20"),
-                            ActivityDetails(name="Eiffel Tower", price="$30"),
-                            ActivityDetails(name="French Cooking Class", price="$80"),
-                        ],
-                    )
-                ],
-                transportation=[
-                    Transportation(
-                        departure="New York JFK",
-                        arrival="Paris CDG",
-                        transportationType=TransportationType.flight,
-                        price="$650",
-                    )
-                ],
-            ),
-            Destination(
-                name="Rome",
-                cities=[
-                    City(
-                        name="Rome",
-                        country="Italy",
-                        accommodation=AccommodationDetails(name="Hotel Colosseo", price="$130/night"),
-                        activityDetails=[
-                            ActivityDetails(name="Colosseum Tour", price="$25"),
-                            ActivityDetails(name="Vatican Museums", price="$35"),
-                            ActivityDetails(name="Italian Food Tour", price="$60"),
-                        ],
-                    )
-                ],
-                transportation=[
-                    Transportation(
-                        departure="Paris CDG",
-                        arrival="Rome FCO",
-                        transportationType=TransportationType.flight,
-                        price="$180",
-                    )
-                ],
-            ),
-        ],
-    )
-    logger.info("POST /suggestions: returning 1 package: %s", mock_package.destinationName)
-    return Summary(summary=[mock_package])
+
+    package_path = Path(__file__).parent.parent / "worker" / "claudio" / "output" / "package.json"
+    try:
+        with open(package_path, "r", encoding="utf-8") as f:
+            raw_package = json.load(f)
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail="Personalized package not found. Run the claudio pipeline first.",
+        )
+
+    raw_package = _normalize_package(raw_package)
+    available = [d["name"] for d in raw_package.get("destinationsList", [])]
+    logger.debug("Available destinations in package: %s", available)
+
+    try:
+        api_key = os.getenv("GEMINI_API_KEY", "")
+        model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not set")
+
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(model_name)
+
+        prompt = (
+            f"The user is looking for a trip with these preferences:\n"
+            f"- Requested destinations: {body.destinations}\n"
+            f"- Interests / activities: {body.activities}\n"
+            f"- Travel window: {body.departureDate} to {body.returnDate}\n\n"
+            f"Our available package destinations are: {available}\n\n"
+            "Select the destination names from the available list that best match the user's request. "
+            "Return ONLY a JSON array of the selected names, e.g. [\"Rome\", \"Florence\"]. "
+            "No markdown, no explanation."
+        )
+
+        logger.info("Calling Gemini to select relevant destinations")
+        response = model.generate_content(prompt)
+        raw_response = response.text.strip()
+        logger.debug("Gemini destination selection response: %r", raw_response)
+
+        match = re.search(r"\[.*?\]", raw_response, re.DOTALL)
+        selected_names = json.loads(match.group()) if match else available
+        logger.info("Selected destinations: %s", selected_names)
+
+    except Exception as e:
+        logger.warning("Gemini selection failed (%s) — using all destinations", e)
+        selected_names = available
+
+    filtered = [d for d in raw_package["destinationsList"] if d["name"] in selected_names]
+    if not filtered:
+        logger.warning("No destinations matched selection — falling back to full list")
+        filtered = raw_package["destinationsList"]
+
+    raw_package["destinationsList"] = filtered
+    package = DestinationPackage(**raw_package)
+    logger.info("POST /suggestions: returning package %r with %d destination(s)", package.destinationName, len(filtered))
+    return Summary(summary=[package])
 
 
 @app.post(

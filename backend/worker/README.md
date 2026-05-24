@@ -30,3 +30,11 @@ uvicorn service.main:app --reload
 # Terminal 2 — Worker
 python worker/worker.py
 ```
+
+## Claudio (AI package generator)
+
+From the `backend/worker/claudio/` directory:
+
+```bash
+python ./main.py
+```
